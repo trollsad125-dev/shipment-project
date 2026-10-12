@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/shipment-service/src/main/resources/db/migration/V1__create_shipment_tables.sql" value="948ba7dd-b153-4c63-a272-557e29d7bb16" />
+  </component>
+</project>

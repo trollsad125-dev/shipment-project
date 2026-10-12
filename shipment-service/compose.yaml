@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: shipment_db
+      POSTGRES_USER: shipment_user
+      POSTGRES_PASSWORD: shipment_local_password
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - shipment_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shipment_user -d shipment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  shipment_postgres_data:
