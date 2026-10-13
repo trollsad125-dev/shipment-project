@@ -1,7 +1,8 @@
 package com.application.shipment.interfaces.rest;
 
+import com.application.shipment.application.command.ConfirmShipmentCommand;
 import com.application.shipment.application.command.CreateShipmentCommand;
-import com.application.shipment.application.command.UpdateShipmentCommand;
+import com.application.shipment.application.command.CancelShipmentCommand;
 import com.application.shipment.application.query.GetShipmentListQuery;
 import com.application.shipment.application.query.GetShipmentQuery;
 import com.application.shipment.application.query.ShipmentQueryService;
@@ -11,6 +12,7 @@ import com.application.shipment.application.services.UpdateShipmentService;
 import com.application.shipment.application.services.CreateShipmentService;
 import com.application.shipment.interfaces.rest.mapper.ShipmentInterfaceMapper;
 import com.application.shipment.interfaces.rest.request.CancelledShipmentRequest;
+import com.application.shipment.interfaces.rest.request.ConfirmedShipmentRequest;
 import com.application.shipment.interfaces.rest.request.CreateShipmentRequest;
 import com.application.shipment.interfaces.rest.request.ShipmentListRequest;
 import com.application.shipment.interfaces.rest.response.ShipmentActionResponse;
@@ -73,8 +75,17 @@ public class ShipmentController {
     @PutMapping("shipment-cancelled")
 
     public ResponseEntity<ShipmentActionResponse> updateCancel(@RequestBody CancelledShipmentRequest cancelledShipmentRequest){
-        UpdateShipmentCommand command = new UpdateShipmentCommand(cancelledShipmentRequest.shipmentId(),cancelledShipmentRequest.reason(), Instant.now());
+        CancelShipmentCommand command = new CancelShipmentCommand(cancelledShipmentRequest.shipmentId(),cancelledShipmentRequest.reason(), Instant.now());
         ShipmentResult result = updateShipmentService.updateCancelShipment(command);
+
+        ShipmentActionResponse responseList = interfaceMapper.toActionResponse(result, ShipmentSuccessMessage.UPDATED.getMessage());
+        return ResponseEntity.ok(responseList);
+    }
+
+    @PutMapping("shipment-confirmed")
+    public ResponseEntity<ShipmentActionResponse> updateConfirmed(@RequestBody ConfirmedShipmentRequest confirmRequest){
+        ConfirmShipmentCommand command = new ConfirmShipmentCommand(confirmRequest.shipmentId(),confirmRequest.bookingReference(), confirmRequest.captureReference(),Instant.now());
+        ShipmentResult result = updateShipmentService.confirmShipment(command);
 
         ShipmentActionResponse responseList = interfaceMapper.toActionResponse(result, ShipmentSuccessMessage.UPDATED.getMessage());
         return ResponseEntity.ok(responseList);

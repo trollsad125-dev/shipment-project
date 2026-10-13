@@ -56,13 +56,22 @@ public class ShipmentRepositoryAdapter implements ShipmentRepository {
                 .orElseThrow(
                         () -> new ShipmentNotFoundException(shipment.getId())
                 );
+        if (shipment.getStatus().equals(ShipmentStatus.CANCELLED)) {
+            mapper.updateCancellation(shipment, entity);
 
-        mapper.updateCancellation(shipment, entity);
-        repository.flush();
-
+        } else if (shipment.getStatus().equals(ShipmentStatus.CONFIRMED)) {
+            mapper.updateConfirmed(shipment, entity);
+        } else {
+            throw new UnsupportedOperationException(
+                    "Status update supports CANCELLED and CONFIRMED only."
+            );
+        }
+            repository.flush();
         return mapper.toDomain(entity);
 
+
     }
+
 
 
 

@@ -131,4 +131,19 @@ public class ShipmentPersistenceMapper {
         entity.setCancellationReason(cancellation.reason());
         entity.setCancelledAt(cancellation.cancelledAt());
     }
+
+    public void updateConfirmed(
+            Shipment shipment,
+            ShipmentJpaEntity entity) {
+
+        ConfirmationDetails confirmationDetails =
+                shipment.getConfirmationDetails();
+
+        entity.setStatus(shipment.getStatus().name());
+        entity.setUpdatedAt(shipment.getUpdatedAt());
+        entity.setConfirmedAt(confirmationDetails.confirmedAt());
+        entity.setBookingReference(confirmationDetails.bookingReference());
+        entity.setCaptureReference(confirmationDetails.captureReference());
+
+    }
 }
